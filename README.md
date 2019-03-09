@@ -4,7 +4,7 @@ This package provides a compatibility layer to [ReSub](https://github.com/Micros
 
 ## Installation
 
-`npm install unsub --save-dev`
+`npm install unsub resub --save-dev`
 
 ## Usage
 
