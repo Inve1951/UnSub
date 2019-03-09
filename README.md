@@ -23,7 +23,7 @@ export default new TodosStore = AutoSubscribeStore class extends StoreBase
 
 ## TodoList.coffee
 import { ComponentBase } from "unsub"
-import TodosStore from "TodosStore"
+import TodosStore from "./TodosStore"
 
 export class TodoList extends ComponentBase
   buildState: (props, bInit) ->
@@ -48,23 +48,24 @@ import { StoreBase, AutoSubscribeStore, autoSubscribe, key } from 'resub';
 
 @AutoSubscribeStore
 class TodosStore extends StoreBase {
-  static Key_SomeFilter = "Key_SomeFilter";
+    static Key_SomeFilter = "Key_SomeFilter";
 
-  @autoSubscribeWithKey(TodosStore.Key_SomeFilter)
-  getTodos() {
-    return this._todosFiltered;
-  }
+    @autoSubscribeWithKey(TodosStore.Key_SomeFilter)
+    getTodos() {
+        return this._todosFiltered;
+    }
 
-  @autoSubscribe
-  getTodosForUser(@key username: string) {
-      return this._todosByUser[username];
-  }
+    @autoSubscribe
+    getTodosForUser(@key username: string) {
+        return this._todosByUser[username];
+    }
 }
 
 export = new TodosStore();
 
 /// TodoList.tsx
 import { ComponentBase } from 'resub';
+import TodosStore from './TodosStore';
 
 export class TodoList extends ComponentBase<{}, TodoListState> {
     protected _buildState(props: {}, initialBuild: boolean): TodoListState {
