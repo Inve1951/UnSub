@@ -1,7 +1,7 @@
 {
   "name": "unsub",
   "description": "ReSub compatibility layer for CoffeeScript",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "license": "MIT",
   "main": "dist/UnSub.min.js",
   "module": "dist/UnSub-module.js",
@@ -10,6 +10,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.3.4",
+    "@babel/plugin-transform-classes": "^7.3.4",
     "@babel/plugin-transform-modules-commonjs": "^7.2.0",
     "babel-preset-minify": "^0.5.0",
     "coffeescript": "^2.3.2"
@@ -27,6 +28,11 @@
   "deprecated": false,
   "homepage": "https://github.com/Inve1951/UnSub#readme",
   "keywords": [
-    "resub", "react", "stores", "coffee", "compat", "decorators"
+    "resub",
+    "react",
+    "stores",
+    "coffee",
+    "compat",
+    "decorators"
   ]
 }

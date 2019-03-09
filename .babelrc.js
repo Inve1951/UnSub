@@ -3,6 +3,7 @@ module.exports = {
     minify: {
       presets: ["minify"],
       plugins: [
+        "@babel/plugin-transform-classes",
         ["@babel/plugin-transform-modules-commonjs", {
           noInterop: true
         }]
