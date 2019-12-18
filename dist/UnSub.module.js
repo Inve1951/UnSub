@@ -1,7 +1,9 @@
-var makeClassDecorator,
+var __bound,
+    makeClassDecorator,
     makeMemberFunctionDecorator,
     makeParamDecorator,
     splice = [].splice;
+
 import * as resub from "resub";
 
 makeClassDecorator = function (decorator) {
@@ -65,11 +67,11 @@ makeParamDecorator = function (decorator) {
   };
 };
 
+__bound = Symbol();
 export var StoreBase = function () {
   class StoreBase extends resub.StoreBase {
     constructor() {
-      var __bound, i, len, name;
-
+      var bound, i, len, name;
       super(...arguments);
 
       if (this.startedTrackingKey) {
@@ -81,12 +83,12 @@ export var StoreBase = function () {
       }
 
       ({
-        __bound
+        [__bound]: bound
       } = this.constructor);
 
-      if (__bound instanceof Array) {
-        for (i = 0, len = __bound.length; i < len; i++) {
-          name = __bound[i];
+      if (bound instanceof Array) {
+        for (i = 0, len = bound.length; i < len; i++) {
+          name = bound[i];
           this[name] = this[name].bind(this);
         }
       }
@@ -104,11 +106,11 @@ export var StoreBase = function () {
       var name;
       [name] = Object.keys(funcObj);
 
-      if (this.__bound == null) {
-        this.__bound = [];
+      if (this[__bound] == null) {
+        this[__bound] = [];
       }
 
-      this.__bound.push(name);
+      this[__bound].push(name);
 
       return funcObj;
     }
@@ -127,14 +129,8 @@ export var ComponentBase = class ComponentBase extends resub.ComponentBase {
     super(...arguments);
 
     if (this.buildState) {
-      this._buildState = function () {
-        return this.buildState(...arguments);
-      };
-    }
-
-    if (this.initStoreSubscriptions) {
-      this._initStoreSubscriptions = function () {
-        return this.initStoreSubscriptions(...arguments);
+      this._buildState = function (props, bInit, state, ...args) {
+        return this.buildState(props, state, bInit, ...args);
       };
     }
 
@@ -151,3 +147,5 @@ export var DeepEqualityShouldComponentUpdate = makeClassDecorator(resub.DeepEqua
 export var CustomEqualityShouldComponentUpdate = makeClassDecorator(resub.CustomEqualityShouldComponentUpdate);
 export var Options = resub.Options;
 export var Types = resub.Types;
+export var setPerformanceMarkingEnabled = resub.setPerformanceMarkingEnabled;
+export var formCompoundKey = resub.formCompoundKey;

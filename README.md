@@ -4,7 +4,7 @@ This package provides a compatibility layer to [ReSub](https://github.com/Micros
 
 ## Installation
 
-`npm install unsub resub --save-dev`
+`npm install unsub resub`
 
 ## Usage
 
@@ -26,7 +26,7 @@ import { ComponentBase } from "unsub"
 import TodosStore from "./TodosStore"
 
 export class TodoList extends ComponentBase
-  buildState: (props, bInit) ->
+  buildState: (props, state, bInit) ->
     todosFiltered: TodosStoreInstance.getTodos()
     userTodos: TodosStoreInstance.getTodosForUser @props.username
 
@@ -68,7 +68,7 @@ import { ComponentBase } from 'resub';
 import TodosStore from './TodosStore';
 
 export class TodoList extends ComponentBase<{}, TodoListState> {
-    protected _buildState(props: {}, initialBuild: boolean): TodoListState {
+    protected _buildState(props: {}, initialBuild: boolean, state: {}): TodoListState {
         return {
             todosFiltered: TodosStoreInstance.getTodos(),
             userTodos: TodosStoreInstance.getTodosForUser(this.props.username)
@@ -89,6 +89,35 @@ export class TodoList extends ComponentBase<{}, TodoListState> {
 }
 ```
 
+
+## Breaking Change in v2.0.0
+
+**ReSub** `v2.0.0-rc.2` introduced a new argument to stores' `_buildState` function.
+
+```coffee
+# old:
+buildState: (props, bInit) ->
+_buildState: (props, bInit) ->
+# new:
+buildState: (props, state, bInit) ->
+_buildState: (props, bInit, state) ->
+```
+
+### Reasoning for the new argument:
+
+Changes in ReSub/React made it unreliable and bugprone to use `this.state` inside `_buildState`. It was not always updated and would reflect old state. As a workaround they added `state` as a third argument.
+
+### Reasoning for breaking the old signature:
+
+There's 2 parts to that answer.
+
+Firstly it feels far more natural to have `state` follow `props`. Most (if not all these days) of React's functions taking both `props` and `state` have them as the first 2 arguments and in that same order; especially if you use [preact](https://preactjs.com/) (which you should).
+
+Secondly, if you made use of `@state` inside `buildState` there's a high chance it's buggy now (breaking change in React/ReSub). To fix that you are required to go thru your code and switch to using the `state` argument. While doing that you may as well switch to the new (and better) signature.
+
+Yes, if you aren't affected by \#2 `bInit` still moved and I broke your components. The above 2 reasons are big enough to warrant you do a search and replace.
+
+
 ## Overview
 
 **UnSub** principially is used the same way as **ReSub**. One key difference is that decorators which take an argument do not return a decorator when called but instead are called with the arguments, followed by whatever they are decorating.
@@ -99,6 +128,10 @@ export class TodoList extends ComponentBase<{}, TodoListState> {
 # incorrect:
 @autoSubscribeWithKey(@Key_Filtered) getFilteredData: -> @filteredData
 ```
+
+Furthermore it allows you to omit the underscore on your overrides. E.g. `buildState` instead of `_buildState`. This more closely follows React's style of writing components.
+
+Also see v2's breaking changes in the previous section.
 
 ### Exports
 

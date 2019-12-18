@@ -20,7 +20,7 @@ class TodosStore extends StoreBase {
   }
 }
 class TodoList extends ComponentBase<{}, TodoListState> {
-  protected _buildState(props: {}, initialBuild: boolean): TodoListState {
+  protected _buildState(props: {}, initialBuild: boolean, incomingState: {}): TodoListState {
       return {
           todosWhatever: TodosStoreInstance.getTodos(),
           userTodos: TodosStoreInstance.getTodosForUser(this.props.username)
@@ -39,7 +39,7 @@ TodosStore = AutoSubscribeStore class extends StoreBase
     @_todosByUser[username]
 
 class TodoList extends ComponentBase
-  buildState: (props, bInit) ->
+  buildState: (props, state, bInit) ->
     todosWhatever: TodosStoreInstance.getTodos()
     userTodos: TodosStoreInstance.getTodosForUser @props.username
 
@@ -70,6 +70,7 @@ makeParamDecorator = (decorator) -> (index, funcObj = 0) ->
   decorator @::, name, index
   [name]: @::[name]
 
+__bound = Symbol()
 
 export class StoreBase extends resub.StoreBase
   constructor: ###(throttleMs = 0, bypassTriggerBlocks = no)### ->
@@ -78,8 +79,8 @@ export class StoreBase extends resub.StoreBase
       @_startedTrackingKey = @startedTrackingKey
     if @stoppedTrackingKey
       @_stoppedTrackingKey = @stoppedTrackingKey
-    {__bound} = @constructor
-    if __bound instanceof Array then for name in __bound
+    {[__bound]: bound} = @constructor
+    if bound instanceof Array then for name in bound
       @[name] = @[name].bind this
 
   getSubscriptionKeys: -> @_getSubscriptionKeys arguments...
@@ -92,18 +93,16 @@ export class StoreBase extends resub.StoreBase
 
   @bound: (funcObj) ->
     [name] = Object.keys funcObj
-    @__bound ?= []
-    @__bound.push name
+    @[__bound] ?= []
+    @[__bound].push name
     funcObj
 
 export class ComponentBase extends resub.ComponentBase
   constructor: ->
     super arguments...
     # The decoration is so you can still bind them with CS syntax
-    if @buildState then @_buildState = ->
-      @buildState arguments...
-    if @initStoreSubscriptions then @_initStoreSubscriptions = ->
-      @initStoreSubscriptions arguments...
+    if @buildState then @_buildState = (props, bInit, state, args...) ->
+      @buildState props, state, bInit, args...
     if @componentDidRender then @_componentDidRender = ->
       @componentDidRender arguments...
 
@@ -121,7 +120,8 @@ export CustomEqualityShouldComponentUpdate =
 export Options = resub.Options
 export Types = resub.Types
 
-
+export setPerformanceMarkingEnabled = resub.setPerformanceMarkingEnabled
+export formCompoundKey = resub.formCompoundKey
 
 
 

@@ -1,7 +1,7 @@
 {
   "name": "unsub",
   "description": "ReSub compatibility layer for CoffeeScript",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "license": "MIT",
   "main": "dist/UnSub.min.js",
   "module": "dist/UnSub-module.js",
@@ -9,14 +9,14 @@
     "build": "cake -e minify -o dist/UnSub.min.js build && cake -e module -o dist/UnSub.module.js build"
   },
   "devDependencies": {
-    "@babel/core": "^7.3.4",
-    "@babel/plugin-transform-classes": "^7.3.4",
-    "@babel/plugin-transform-modules-commonjs": "^7.2.0",
-    "babel-preset-minify": "^0.5.0",
-    "coffeescript": "^2.3.2"
+    "@babel/core": "^7.7.5",
+    "@babel/plugin-transform-classes": "^7.7.4",
+    "@babel/plugin-transform-modules-commonjs": "^7.7.5",
+    "babel-preset-minify": "^0.5.1",
+    "coffeescript": "~2.4.1"
   },
   "peerDependencies": {
-    "resub": "^1.0.13"
+    "resub": "^2.0.0-rc.2"
   },
   "repository": {
     "type": "git",
