@@ -173,6 +173,11 @@ MyStore = AutoSubscribeStore class extends StoreBase
     @data[b][a]
 ```
 
-Note that member function and parameter decorators (prefixed with `@`) are actually static class members of `StoreBase`. This means that you must not have static members on your store that use the same identifier as a decorator you make use of inside the class body. It also means that you only need to import classes and class decorators.
+#### Utilities
+
+- `setPerformanceMarkingEnabled`
+- `formCompoundKey`
+
+Note that member function and parameter decorators (prefixed with `@`) are actually static class members of `StoreBase`. This means that you must not have static members on your store that use the same identifier as a decorator you make use of inside the class body. It also means that you only need to import classes, class decorators and utility functions.
 
 For more information please refer to the [ReSub documentation](https://github.com/Microsoft/ReSub#readme).
